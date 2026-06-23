@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, Dhidhi! 🎂</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+  :root {
+    --pink-light: #FFD6E7;
+    --pink-main:  #FF85A2;
+    --pink-deep:  #E84393;
+    --purple:     #C47AC0;
+    --cream:      #FFF5F8;
+    --white:      #FFFFFF;
+    --text-dark:  #5A2A4A;
+    --text-mid:   #8B4A72;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ── FLOATING DECORATIONS ── */
+  .floaties { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .floaty {
+    position: absolute;
+    font-size: 1.4rem;
+    animation: floatUp 6s ease-in-out infinite;
+    opacity: 0.35;
+  }
+  @keyframes floatUp {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-18px) rotate(10deg); }
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: scale(1.04);
+    z-index: 10;
+  }
+  .screen.active { opacity: 1; pointer-events: all; transform: scale(1); }
+  .screen.exit   { opacity: 0; transform: scale(0.96); pointer-events: none; }
+
+  /* ── SCREEN 1 – INTRO ── */
+  #screen-1 {
+    background: radial-gradient(ellipse at center, #ffe0f0 0%, #ffc2de 100%);
+    text-align: center;
+  }
+  .big-emoji { font-size: 5rem; animation: bounce 1.2s ease-in-out infinite; }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+  .intro-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--pink-deep);
+    margin: 0.5rem 0;
+    text-shadow: 2px 2px 8px rgba(232,67,147,.25);
+  }
+  .intro-sub    { font-size: 1rem; color: var(--text-mid); margin-bottom: 2rem; }
+  .tap-hint     { font-size: 0.85rem; color: var(--pink-main); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  /* ── SCREEN 2 – SURAT ── */
+  #screen-2 { background: var(--white); }
+  .letter-card {
+    background: var(--white);
+    border: 2px solid var(--pink-light);
+    border-radius: 24px;
+    padding: 2rem 2.5rem;
+    max-width: 560px; width: 100%;
+    box-shadow: 0 8px 40px rgba(232,67,147,.12);
+    position: relative;
+    text-align: left;
+  }
+  .letter-card::before {
+    content: '💌';
+    position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+    font-size: 2.5rem;
+  }
+  .letter-from  { font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: var(--purple); margin-bottom: 1rem; }
+  .letter-body  { font-size: 1rem; line-height: 1.9; color: var(--text-dark); white-space: pre-line; }
+  .letter-sign  { font-family: 'Dancing Script', cursive; font-size: 1.4rem; color: var(--pink-deep); text-align: right; margin-top: 1.2rem; }
+
+  /* ── SCREEN 3 – FOTO ── */
+  #screen-3 { background: linear-gradient(160deg, #ffe0f0 0%, #f8d7f0 100%); }
+  .photo-section-title { font-family: 'Dancing Script', cursive; font-size: 2rem; color: var(--pink-deep); margin-bottom: 1.2rem; text-align: center; }
+  .photo-stage {
+    position: relative;
+    width: min(400px, 90vw);
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(232,67,147,.2);
+    overflow: hidden;
+  }
+  .photo-frame { width: 100%; aspect-ratio: 4/3; position: relative; cursor: pointer; }
+  .photo-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; display: flex; align-items: center; justify-content: center; background: var(--pink-light); }
+  .photo-slide.active { opacity: 1; }
+  .photo-slide img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--text-mid); }
+  .photo-placeholder .ph-icon { font-size: 3.5rem; }
+  .photo-placeholder p { font-size: 0.8rem; text-align: center; padding: 0 1rem; }
+  .photo-desc-box { padding: 1rem 1.2rem; background: white; }
+  .photo-desc-text { font-size: 0.9rem; color: var(--text-dark); line-height: 1.6; min-height: 2.5rem; transition: opacity .4s; }
+  .photo-counter { display: flex; align-items: center; justify-content: space-between; margin-top: 0.6rem; }
+  .photo-dots   { display: flex; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink-light); transition: background .3s; }
+  .dot.active { background: var(--pink-main); }
+  .nav-arrows { display: flex; gap: 8px; }
+  .nav-btn { background: var(--pink-light); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1rem; cursor: pointer; color: var(--pink-deep); transition: background .2s; }
+  .nav-btn:hover { background: var(--pink-main); color: white; }
+
+  /* ── SCREEN 4 – PENUTUP ── */
+  #screen-4 { background: radial-gradient(ellipse at center, #ffe0f0 0%, #ffc2de 100%); text-align: center; }
+  .closing-title { font-family: 'Dancing Script', cursive; font-size: clamp(2rem, 7vw, 4rem); color: var(--pink-deep); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+  .closing-sub { font-size: 1rem; color: var(--text-mid); margin: 1rem 0 2rem; }
+  .heart-rain   { font-size: 2rem; letter-spacing: 0.5rem; animation: bounce 1.5s infinite; }
+
+  /* ── GLOBAL BUTTON ── */
+  .btn-next {
+    margin-top: 1.5rem;
+    padding: 0.8rem 2.5rem;
+    border: none; border-radius: 50px;
+    background: linear-gradient(135deg, var(--pink-main), var(--pink-deep));
+    color: white; font-family: 'Quicksand', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(232,67,147,.35);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-next:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(232,67,147,.45); }
+
+  /* ── PROGRESS DOTS (top) ── */
+  #progress { position: fixed; top: 1.2rem; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 100; }
+  .pdot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,133,162,.3); transition: background .4s, transform .3s; }
+  .pdot.done { background: var(--pink-main); transform: scale(1.3); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece { position: fixed; width: 10px; height: 10px; border-radius: 2px; animation: fall linear forwards; pointer-events: none; z-index: 999; }
+  @keyframes fall { 0%{ transform: translateY(-20px) rotate(0deg); opacity: 1; } 100%{ transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+
+  /* ── SCROLLABLE LETTER ── */
+  .letter-scroll { max-height: 55vh; overflow-y: auto; padding-right: 4px; }
+  .letter-scroll::-webkit-scrollbar { width: 4px; }
+  .letter-scroll::-webkit-scrollbar-thumb { background: var(--pink-light); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- FLOATIES -->
+<div class="floaties" id="floaties"></div>
+
+<!-- PROGRESS -->
+<div id="progress">
+  <div class="pdot" id="pd1"></div>
+  <div class="pdot" id="pd2"></div>
+  <div class="pdot" id="pd3"></div>
+  <div class="pdot" id="pd4"></div>
+</div>
+
+<!-- ══════════ SCREEN 1 – INTRO ══════════ -->
+<div class="screen active" id="screen-1">
+  <div class="big-emoji" id="s1-emoji">🎂</div>
+  <h1 class="intro-title" id="s1-title">Happy Birthday,<br>Dhidhi! 💖</h1>
+  <p class="intro-sub" id="s1-sub">Ada sesuatu spesial untukmu hari ini~ ✨</p>
+  <button class="btn-next" onclick="goTo(2)">Buka hadiahnya! 🎁</button>
+  <p class="tap-hint" style="margin-top:1rem;">klik tombol di atas ya~ 🌸</p>
+</div>
+
+<!-- ══════════ SCREEN 2 – SURAT ══════════ -->
+<div class="screen" id="screen-2">
+  <div class="letter-card">
+    <p class="letter-from" id="s2-from">Kepada: <strong id="nama-cewe">Dhidhi</strong> tersayangku 💝</p>
+    <div class="letter-scroll">
+      <p class="letter-body" id="s2-body"></p>
+    </div>
+    <p class="letter-sign" id="s2-sign">— Dari yang selalu sayang kamu 🌷</p>
+  </div>
+  <button class="btn-next" onclick="goTo(3)">Lihat kenangan kita~ 📸</button>
+</div>
+
+<!-- ══════════ SCREEN 3 – FOTO ══════════ -->
+<div class="screen" id="screen-3">
+  <p class="photo-section-title" id="s3-title">📸 Kenangan Kita 📸</p>
+  <div class="photo-stage">
+    <div class="photo-frame">
+      <div class="photo-slide active" id="slide-0">
+        <div class="photo-placeholder">
+          <span class="ph-icon">🌸</span>
+          <p>Ganti dengan foto pertamamu!<br>Edit variabel <code>photos</code> di JS</p>
+        </div>
+      </div>
+      <div class="photo-slide" id="slide-1">
+        <div class="photo-placeholder">
+          <span class="ph-icon">🌼</span>
+          <p>Foto kedua di sini~</p>
+        </div>
+      </div>
+      <div class="photo-slide" id="slide-2">
+        <div class="photo-placeholder">
+          <span class="ph-icon">🌻</span>
+          <p>Foto ketiga di sini~</p>
+        </div>
+      </div>
+      <div class="photo-slide" id="slide-3">
+        <div class="photo-placeholder">
+          <span class="ph-icon">💖</span>
+          <p>Foto keempat di sini~</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-desc-box">
+      <p class="photo-desc-text" id="photo-desc">Loading~</p>
+      <div class="photo-counter">
+        <div class="photo-dots" id="photo-dots"></div>
+        <div class="nav-arrows">
+          <button class="nav-btn" onclick="prevPhoto()">◀</button>
+          <button class="nav-btn" onclick="nextPhoto()">▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-next" onclick="goTo(4)" style="margin-top:1.2rem;">Satu hal lagi~ 💫</button>
+</div>
+
+<!-- ══════════ SCREEN 4 – PENUTUP ══════════ -->
+<div class="screen" id="screen-4">
+  <div class="heart-rain" id="s4-hearts">💖💕💝💗💓</div>
+  <h1 class="closing-title" id="s4-title">I Love You!</h1>
+  <p class="closing-sub" id="s4-sub">Happy Birthday, cantikku! Semoga panjang umur dan selalu bahagia ya~ 🎉🎂✨</p>
+  <button class="btn-next" onclick="launchConfetti()">🎉 Rayakan!</button>
+</div>
+
+<script>
+/* ╔══════════════════════════════════════════════════╗
+   ║   🎀 KUSTOMISASI TEKS – UBAH BAGIAN INI YA!     ║
+   ╚══════════════════════════════════════════════════╝ */
+
+const CONFIG = {
+  // ── Nama pacar kamu
+  namaCewe: "Dhidhi",
+
+  // ── Screen 1
+  s1Emoji: "🎂",
+  s1Title: "Happy Birthday,\nDhidhi 💖",
+  s1Sub:   "Ada sesuatu spesial untukmu hari ini~ ✨",
+
+  // ── Screen 2 – Surat
+  s2From:  "Kepada: Dhidhi anak Han Simboks",
+  s2Sign:  "— Dari Pria Tampan Menawan 🌷",
+  // FIX: backtick penutup ditambahkan di akhir string, duplikat baris pembuka dihapus
+  s2Body: `Heyy Dhidhi~! 🌸
+
+Selamat ulang tahun ya, Dhidhi!
+Hari ini adalah hari yang paling spesial didunia eh tidak tapi seluruh alam semesta,
+karena hari ini adalah hari kamu lahir ke dunia ini dengan energi yang luar biasa 🌍✨
+
+Aku mau kamu tau, setiap hari bersamamu adalah hadiah terbaik
+yang pernah aku terima. Kamu itu kayak mentari pagi yang selalu
+bikin hariku jadi lebih berwarna 🌈
+
+Makasih ya udah jadi Dhidhi yang luar biasa itu.
+Makasih udah mau ada di sisi aku disaat orang lain tidak melihat aku,
+makasih udah mau ngubah diri aku menjadi lebih baik,
+dan makasih udah mau sayang sama aku sampai saat ini 🥹💕
+
+Semoga di usia baru ini, kamu makin bahagia, makin semangat mengejar impianmu,
+makin cantik (walaupun udah cantik banget sih),
+makin sehat, dan semua impianmu tercapai ya! ⭐
+
+Aku Fafa minta maaf ya kalau selama ini aku banyak salah sama kamu,
+aku akan berusaha menjadi lebih baik lagi kedepannya
+dan aku juga akan selalu mencintaimu,
+"jika dikehidupan ini terulang aku akan tetap memilih kamu menjadi pasangan hidupku"
+
+Aku cinta kamu, kemarin, hari ini, dan selalu~ 🌙💖`,
+
+  // ── Screen 3 – Judul foto
+  s3Title: "📸 Kenangan kita 📸",
+
+  // ── Screen 4
+  s4Title:  "Aku sayang kamu selalu, Dhidhi!",
+  s4Sub:    "Happy Birthday, Dhidhi! Semoga panjang umur dan selalu bahagia ya, sukses terus pantang menyerah.~ 🎉🎂✨",
+  s4Hearts: "💖💕💝💗💓",
+};
+
+/* ╔══════════════════════════════════════════════════╗
+   ║   📸 DATA FOTO – UBAH SRC DAN DESKRIPSINYA!     ║
+   ╚══════════════════════════════════════════════════╝ */
+
+const photos = [
+  {
+    src:  "d:\Fotbar pertama kali.jpg",
+    desc: "🌸 Momen pertama yang selalu aku ingat yaitu fotbar pertama kali sama kamu yang dimana awalnya cuma challange dan foto itu jadi kenangan yang tak terlupakan. Senyummu waktu itu bikin aku nggak bisa berhenti senyum juga~ 💕"
+  },
+  {
+    src:  "d:\Fotbar saat liburan ke Malang.jpg",
+    desc: "🌼 Hari dimana disini menyenangkan banget ke Jatim Park sama kamu, dan aku jujur sering salting saat ngobrol sama kamu. Btw kamu lucu banget di sini! 😍✨"
+  },
+  {
+    src:  "d:\Foto seru.jpg",
+    desc: "🌻 Foto dimana kita ketawa tawa bahagia bersama, dan juga dimana kita bener bener gabut saat kita menginjak kelas 10 apalagi aku fokus organisasi dan ekskul 🥲😶"
+  },
+  {
+    src:  "d:\IMG-20250704-WA0010.jpg",
+    desc: "💖 Foto favoritku sama kamu sewaktu kita diBali walau banyak lika-liku saat disana tapi aku senang bisa melihatmu tersenyum dan foto itu akan aku simpan. Semoga masih banyak momen indah yang akan kita buat bersama~ 🌙"
+  },
+];
+
+/* ══════════════════════════════════════════════════
+   JANGAN UBAH DI BAWAH INI KECUALI KAMU FAMILIAR
+   DENGAN JAVASCRIPT 🙂
+   ══════════════════════════════════════════════════ */
+
+// Apply config text
+document.getElementById('s1-emoji').textContent  = CONFIG.s1Emoji;
+document.getElementById('s1-title').innerHTML    = CONFIG.s1Title.replace('\n', '<br>');
+document.getElementById('s1-sub').textContent    = CONFIG.s1Sub;
+document.getElementById('nama-cewe').textContent = CONFIG.namaCewe;
+// FIX: s2-from sekarang hanya satu sumber kebenaran (dari CONFIG.s2From), tidak dobel
+document.getElementById('s2-from').textContent  = CONFIG.s2From + ' 💝';
+document.getElementById('s2-body').textContent  = CONFIG.s2Body;
+document.getElementById('s2-sign').textContent  = CONFIG.s2Sign;
+document.getElementById('s3-title').textContent = CONFIG.s3Title;
+document.getElementById('s4-title').textContent = CONFIG.s4Title;
+document.getElementById('s4-sub').textContent   = CONFIG.s4Sub;
+document.getElementById('s4-hearts').textContent = CONFIG.s4Hearts;
+
+// Inject photos into slides
+photos.forEach((p, i) => {
+  const slide = document.getElementById(`slide-${i}`);
+  if (!slide) return;
+  if (p.src) {
+    slide.innerHTML = `<img src="${p.src}" alt="kenangan ${i+1}">`;
+  }
+});
+
+// Floaties
+const floatEmojis = ['🌸','💕','✨','🌷','💖','🎀','🌺','💗','🎵','⭐'];
+const floatiesEl  = document.getElementById('floaties');
+for (let i = 0; i < 18; i++) {
+  const el = document.createElement('div');
+  el.className = 'floaty';
+  el.textContent = floatEmojis[Math.floor(Math.random() * floatEmojis.length)];
+  el.style.left              = Math.random() * 100 + '%';
+  el.style.top               = Math.random() * 100 + '%';
+  el.style.animationDelay    = Math.random() * 4 + 's';
+  el.style.animationDuration = (4 + Math.random() * 4) + 's';
+  floatiesEl.appendChild(el);
+}
+
+// Photo logic
+let currentPhoto = 0;
+const dotsEl = document.getElementById('photo-dots');
+
+function buildDots() {
+  dotsEl.innerHTML = '';
+  photos.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => showPhoto(i);
+    dotsEl.appendChild(d);
+  });
+}
+buildDots();
+
+function showPhoto(idx) {
+  document.getElementById(`slide-${currentPhoto}`).classList.remove('active');
+  dotsEl.children[currentPhoto].classList.remove('active');
+  currentPhoto = idx;
+  document.getElementById(`slide-${currentPhoto}`).classList.add('active');
+  dotsEl.children[currentPhoto].classList.add('active');
+  const descEl = document.getElementById('photo-desc');
+  descEl.style.opacity = 0;
+  setTimeout(() => {
+    descEl.textContent = photos[currentPhoto].desc;
+    descEl.style.opacity = 1;
+  }, 300);
+}
+
+// Initialize first desc
+document.getElementById('photo-desc').textContent = photos[0].desc;
+
+function nextPhoto() { showPhoto((currentPhoto + 1) % photos.length); }
+function prevPhoto() { showPhoto((currentPhoto - 1 + photos.length) % photos.length); }
+
+// Screen transitions
+let currentScreen = 1;
+function goTo(n) {
+  const prev = document.getElementById(`screen-${currentScreen}`);
+  prev.classList.add('exit');
+  setTimeout(() => { prev.classList.remove('active', 'exit'); }, 700);
+
+  currentScreen = n;
+  const next = document.getElementById(`screen-${n}`);
+  setTimeout(() => { next.classList.add('active'); }, 350);
+
+  // progress dots
+  for (let i = 1; i <= 4; i++) {
+    const pd = document.getElementById(`pd${i}`);
+    pd.classList.toggle('done', i <= n);
+  }
+
+  if (n === 4) setTimeout(launchConfetti, 800);
+}
+
+// Confetti
+function launchConfetti() {
+  const colors = ['#FF85A2','#FFD6E7','#C47AC0','#FFB347','#87CEEB','#FF69B4'];
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.left            = Math.random() * 100 + 'vw';
+    c.style.background      = colors[Math.floor(Math.random() * colors.length)];
+    c.style.width           = (6 + Math.random() * 8) + 'px';
+    c.style.height          = (6 + Math.random() * 8) + 'px';
+    c.style.borderRadius    = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.animationDuration = (2 + Math.random() * 3) + 's';
+    c.style.animationDelay  = (Math.random() * 0.8) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+</script>
+</body>
+</html>
